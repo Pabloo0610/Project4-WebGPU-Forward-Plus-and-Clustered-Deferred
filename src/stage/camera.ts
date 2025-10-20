@@ -3,6 +3,17 @@ import { toRadians } from "../math_util";
 import { device, canvas, fovYDegrees, aspectRatio } from "../renderer";
 
 class CameraUniforms {
+
+    // const CameraUniformsValues = new ArrayBuffer(272);
+    // const CameraUniformsViews = {
+    //     viewProjMat: new Float32Array(CameraUniformsValues, 0, 16),
+    //     projMat: new Float32Array(CameraUniformsValues, 64, 16),
+    //     invProjMat: new Float32Array(CameraUniformsValues, 128, 16),
+    //     viewMat: new Float32Array(CameraUniformsValues, 192, 16),
+    //     screenSize: new Float32Array(CameraUniformsValues, 256, 2),
+    //     zNearFar: new Float32Array(CameraUniformsValues, 264, 2),
+    // };
+
     readonly buffer = new ArrayBuffer(272);
     //private readonly floatView = new Float32Array(this.buffer);
     private readonly viewProjMatView = new Float32Array(this.buffer, 0, 16);

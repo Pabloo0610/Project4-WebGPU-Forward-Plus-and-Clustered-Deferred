@@ -34,6 +34,9 @@ struct FragmentInput
 const cDim = vec3u(${numClusterX}, ${numClusterY}, ${numClusterZ});
 const numClusters = cDim.x * cDim.y * cDim.z;
 
+const zNear = ${sceneNear};
+const zFar  = ${sceneFar};
+
 @fragment
 fn main(in: FragmentInput) -> @location(0) vec4f
 {
@@ -47,15 +50,19 @@ fn main(in: FragmentInput) -> @location(0) vec4f
     let cx = u32(floor(in.fragPos.x / camera.screenSize.x * f32(cDim.x)));
     let cy = u32(floor((1.0-(in.fragPos.y / camera.screenSize.y)) * f32(cDim.y)));
 
-    let zNear = camera.zNearFar.x;
-    let zFar  = camera.zNearFar.y;
-
     let depthz = clamp(-in.pos_view.z, zNear, zFar);
     let czF = (depthz - zNear) / (zFar - zNear) * f32(cDim.z);
     let cz = u32(clamp(floor(czF), 0.0, f32(cDim.z - 1u)));
+    // if(depthz<25.0) {
+    //     return vec4(0.0,0.0,0.0,1.0);
+    // }
 
     let clusterIdx = clamp(cz * cDim.x * cDim.y + cy * cDim.x + cx, 0u, numClusters-1u);
+    //let clusterIdx = 0u;
     let cluster = clusterSet.clusters[clusterIdx];
+    // if (cluster.numLights >= 50u) {
+    //     return vec4(1.0,0.0,0.0, 1.0);
+    // }
 
     for (var lightIdx = 0u; lightIdx < cluster.numLights; lightIdx++) {
         let light = lightSet.lights[cluster.lightIndices[lightIdx]];
@@ -63,5 +70,9 @@ fn main(in: FragmentInput) -> @location(0) vec4f
     }
 
     var finalColor = diffuseColor.rgb * totalLightContrib;
+    // let r = f32(clusterIdx % 256u) / 255.0;
+    // let g = f32((clusterIdx / 256u) % 256u) / 255.0;
+    // let b = f32(clusterIdx / (256u * 256u)) / 255.0;
+    // return vec4f(r, g, b, 1.0);
     return vec4(finalColor, 1);
 }

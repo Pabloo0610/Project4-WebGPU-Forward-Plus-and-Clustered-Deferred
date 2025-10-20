@@ -45,6 +45,30 @@ fn zlinearSliceNdc(near: f32, far: f32, totalz: f32, curz: f32) ->vec2f {
     return vec2f(ndcn, ndcf);
 }
 
+fn zlogSliceNdc(near: f32, far: f32, totalz: f32, curz: f32) -> vec2f {
+    let logNear = log(near);
+    let logFar = log(far);
+
+    let t0 = curz / totalz;
+    let t1 = (curz + 1.0) / totalz;
+
+    let zNearSlice = exp(mix(logNear, logFar, t0));
+    let zFarSlice = exp(mix(logNear, logFar, t1));
+
+    let dn = -zNearSlice;
+    let df = -zFarSlice;
+
+    let viewn = vec4f(0.0, 0.0, dn, 1.0);
+    let viewf = vec4f(0.0, 0.0, df, 1.0);
+
+    let clipn = camera.projMat * viewn;
+    let ndcn = clipn.z / clipn.w;
+    let clipf = camera.projMat * viewf;
+    let ndcf = clipf.z / clipf.w;
+
+    return vec2f(ndcn, ndcf);
+}
+
 fn sphereAABBIntersectionTest(c:vec3f, r:f32, bmin:vec3f, bmax:vec3f) -> bool {
     let nearest = clamp(c, bmin, bmax);
 
@@ -74,7 +98,8 @@ fn main(@builtin(global_invocation_id) globalIdx: vec3u) {
     let ndcx = vec2f((f32(cx) / f32(cDim.x)) * 2.0 - 1.0, (f32(cx+1u) / f32(cDim.x)) * 2.0 - 1.0);
     let ndcy = vec2f((f32(cy) / f32(cDim.y)) * 2.0 - 1.0, (f32(cy+1u) / f32(cDim.y)) * 2.0 - 1.0);
 
-    let ndcz = zlinearSliceNdc(camera.zNearFar.x, camera.zNearFar.y, f32(cDim.z), f32(cz));
+    let ndcz = zlinearSliceNdc(${sceneNear}, ${sceneFar}, f32(cDim.z), f32(cz));
+    //let ndcz = zlogSliceNdc(camera.zNearFar.x, camera.zNearFar.y, f32(cDim.z), f32(cz));
     // let ndcz0 = ndcz.x;
     // let ndcz1 = ndcz.y;
     var bmin = vec3f( 1e30,  1e30,  1e30);
@@ -99,7 +124,7 @@ fn main(@builtin(global_invocation_id) globalIdx: vec3u) {
 
     let lightRadius = f32(${lightRadius});
     for (var lightIdx = 0u; lightIdx < lightSet.numLights; lightIdx++) {
-        if (lightIdx >= ${numLightsPerCluster}) {
+        if (curNLights >= ${numLightsPerCluster}) {
             break;
         }
         let lightPosWorld = lightSet.lights[lightIdx].pos;
