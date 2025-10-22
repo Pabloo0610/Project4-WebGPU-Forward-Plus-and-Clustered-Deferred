@@ -266,4 +266,3 @@ export class ClusteredDeferredRenderer extends renderer.Renderer {
         renderer.device.queue.submit([encoder.finish()]);
     }
 }
-
