@@ -267,5 +267,3 @@ export class ClusteredDeferredRenderer extends renderer.Renderer {
     }
 }
 
-// Additional properties added to the class (TypeScript doesn't require them to be declared above, but
-// declaring them here improves readability for future edits)

@@ -59,13 +59,13 @@ fn main(in: FragmentInput) -> @location(0) vec4f
 
     let clusterIdx = clamp(cz * cDim.x * cDim.y + cy * cDim.x + cx, 0u, numClusters-1u);
     //let clusterIdx = 0u;
-    let cluster = clusterSet.clusters[clusterIdx];
+    let cluster = &clusterSet.clusters[clusterIdx];
     // if (cluster.numLights >= 50u) {
     //     return vec4(1.0,0.0,0.0, 1.0);
     // }
 
-    for (var lightIdx = 0u; lightIdx < cluster.numLights; lightIdx++) {
-        let light = lightSet.lights[cluster.lightIndices[lightIdx]];
+    for (var lightIdx = 0u; lightIdx < (*cluster).numLights; lightIdx++) {
+        let light = lightSet.lights[(*cluster).lightIndices[lightIdx]];
         totalLightContrib += calculateLightContrib(light, in.pos, normalize(in.nor));
     }
 

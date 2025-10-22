@@ -38,11 +38,11 @@ fn main(in: FSIn) -> @location(0) vec4f {
 	let cz = u32(clamp(floor(czF), 0.0, f32(cDim.z - 1u)));
 
 	let clusterIdx = clamp(cz * cDim.x * cDim.y + cy * cDim.x + cx, 0u, cDim.x*cDim.y*cDim.z - 1u);
-	let cluster = clusterSet.clusters[clusterIdx];
+	let cluster = &clusterSet.clusters[clusterIdx];
 
 	var totalLightContrib = vec3f(0.0, 0.0, 0.0);
-	for (var i = 0u; i < cluster.numLights; i++) {
-		let light = lightSet.lights[cluster.lightIndices[i]];
+	for (var i = 0u; i < (*cluster).numLights; i++) {
+		let light = lightSet.lights[(*cluster).lightIndices[i]];
 		totalLightContrib += calculateLightContrib(light, pos.xyz, normalize(norm.xyz));
 	}
 
