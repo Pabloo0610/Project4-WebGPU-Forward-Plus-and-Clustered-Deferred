@@ -266,6 +266,3 @@ export class ClusteredDeferredRenderer extends renderer.Renderer {
         renderer.device.queue.submit([encoder.finish()]);
     }
 }
-
-// Additional properties added to the class (TypeScript doesn't require them to be declared above, but
-// declaring them here improves readability for future edits)
