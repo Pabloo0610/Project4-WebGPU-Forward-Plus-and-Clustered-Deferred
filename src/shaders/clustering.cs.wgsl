@@ -99,9 +99,7 @@ fn main(@builtin(global_invocation_id) globalIdx: vec3u) {
     let ndcy = vec2f((f32(cy) / f32(cDim.y)) * 2.0 - 1.0, (f32(cy+1u) / f32(cDim.y)) * 2.0 - 1.0);
 
     let ndcz = zlinearSliceNdc(${sceneNear}, ${sceneFar}, f32(cDim.z), f32(cz));
-    //let ndcz = zlogSliceNdc(camera.zNearFar.x, camera.zNearFar.y, f32(cDim.z), f32(cz));
-    // let ndcz0 = ndcz.x;
-    // let ndcz1 = ndcz.y;
+
     var bmin = vec3f( 1e30,  1e30,  1e30);
     var bmax = vec3f(-1e30, -1e30, -1e30);
 

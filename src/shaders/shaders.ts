@@ -32,7 +32,7 @@ export const constants = {
 
     lightRadius: 2.0,
 
-    numLightsPerCluster: 768,
+    numLightsPerCluster: 128,
     numClusterX : 32,
     numClusterY : 32,
     numClusterZ : 32,

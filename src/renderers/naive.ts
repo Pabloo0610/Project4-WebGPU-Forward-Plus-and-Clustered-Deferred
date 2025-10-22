@@ -94,8 +94,7 @@ export class NaiveRenderer extends renderer.Renderer {
     override draw() {
         const encoder = renderer.device.createCommandEncoder();
         const canvasTextureView = renderer.context.getCurrentTexture().createView();
-        
-        this.lights.doLightClustering(encoder);
+        // Naive renderer should not run clustering — keep it as a baseline implementation.
         const renderPass = encoder.beginRenderPass({
             label: "naive render pass",
             colorAttachments: [
